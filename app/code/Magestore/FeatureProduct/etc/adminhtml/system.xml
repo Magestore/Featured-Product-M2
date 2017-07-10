@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="magestore" translate="label" sortOrder="400">
+            <label>Magestore Extension</label>
+        </tab>
+        <section id="featureproduct" translate="label" sortOrder="300" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>FeatureProduct</label>
+            <class>separator-top</class>
+            <tab>magestore</tab>
+            <resource>Magestore_FeatureProduct::config_featureproduct</resource>
+            <group id="general" translate="label" sortOrder="1" type="text" showInDefault="1" showInWebsite="1">
+                <label>General Configuration</label>
+                <field id="active" translate="label" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Feature Product Module</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+            <!--<group id="general1" translate="label" sortOrder="1" type="text" showInDefault="1" showInWebsite="1">-->
+                <!--<label>Configure slide</label>-->
+                <!--<field id="active1" translate="label" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1">-->
+                    <!--<label>Add to Cart</label>-->
+                    <!--<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
+                <!--</field>-->
+                <!--<field id="active2" translate="label" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1">-->
+                    <!--<label>Show products price</label>-->
+                    <!--<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
+                <!--</field>-->
+            <!--</group>-->
+        </section>
+    </system>
+</config>

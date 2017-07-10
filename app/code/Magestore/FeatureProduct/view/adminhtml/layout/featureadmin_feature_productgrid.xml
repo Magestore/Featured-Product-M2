@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) Magestore
+  -->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+<update handle="formkey"/>
+<container name="root">
+    <block class="Magestore\FeatureProduct\Block\Adminhtml\Feature\Edit\Tab\ProductList" name="feature.edit.tab.productlist"/>
+</container>
+</page>

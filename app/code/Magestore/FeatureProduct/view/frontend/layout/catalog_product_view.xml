@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Magestore_FeatureProduct::css/owl.carousel.min.css" />
+        <css src="Magestore_FeatureProduct::css/owl.theme.default.min.css" />
+    </head>
+    <body>
+        <referenceContainer name="right">
+            <block class="Magestore\FeatureProduct\Block\FeatureProduct" name="featureproduct.catalog.sidebar.right.top" before="-" template="Magestore_FeatureProduct::featureproduct.phtml">
+                <action method="setPosition">
+                    <argument name="position" xsi:type="string">catalog-sidebar-right-top</argument>
+                </action>
+            </block>
+            <block class="Magestore\FeatureProduct\Block\FeatureProduct" name="featureproduct.catalog.sidebar.right.bottom" template="Magestore_FeatureProduct::featureproduct.phtml">
+                <action method="setPosition">
+                    <argument name="position" xsi:type="string">catalog-sidebar-right-bottom</argument>
+                </action>
+            </block>
+            <block class="Magestore\FeatureProduct\Block\FeatureProduct" name="featureproduct.product.sidebar.right.top" before="-" template="Magestore_FeatureProduct::featureproduct.phtml">
+                <action method="setPosition">
+                    <argument name="position" xsi:type="string">product-sidebar-right-top</argument>
+                </action>
+            </block>
+            <block class="Magestore\FeatureProduct\Block\FeatureProduct" name="featureproduct.product.sidebar.right.bottom" template="Magestore_FeatureProduct::featureproduct.phtml">
+                <action method="setPosition">
+                    <argument name="position" xsi:type="string">product-sidebar-right-bottom</argument>
+                </action>
+            </block>
+        </referenceContainer>
+
+        <referenceContainer name="content">
+            <block class="Magestore\FeatureProduct\Block\FeatureProduct" name="featureproduct.catalog.content.top" before="-" template="Magestore_FeatureProduct::featureproduct.phtml">
+                <action method="setPosition">
+                    <argument name="position" xsi:type="string">catalog-content-top</argument>
+                </action>
+            </block>
+            <block class="Magestore\FeatureProduct\Block\FeatureProduct" name="featureproduct.catalog.content.bottom" after="-" template="Magestore_FeatureProduct::featureproduct.phtml">
+                <action method="setPosition">
+                    <argument name="position" xsi:type="string">catalog-content-bottom</argument>
+                </action>
+            </block>
+            <block class="Magestore\FeatureProduct\Block\FeatureProduct" name="featureproduct.product.content.top" before="-" template="Magestore_FeatureProduct::featureproduct.phtml">
+                <action method="setPosition">
+                    <argument name="position" xsi:type="string">product-content-top</argument>
+                </action>
+            </block>
+            <block class="Magestore\FeatureProduct\Block\FeatureProduct" name="featureproduct.product.content.bottom" after="-" template="Magestore_FeatureProduct::featureproduct.phtml">
+                <action method="setPosition">
+                    <argument name="position" xsi:type="string">product-content-bottom</argument>
+                </action>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

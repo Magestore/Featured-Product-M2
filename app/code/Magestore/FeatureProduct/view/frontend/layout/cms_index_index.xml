@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Magestore_FeatureProduct::css/owl.carousel.min.css" />
+        <css src="Magestore_FeatureProduct::css/owl.theme.default.min.css" />
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Magestore\FeatureProduct\Block\FeatureProduct" name="featureproduct.cms.page.content.top" before="-" template="Magestore_FeatureProduct::featureproduct.phtml">
+                <action method="setPosition">
+                    <argument name="position" xsi:type="string">cms-page-content-top</argument>
+                </action>
+            </block>
+            <!--<block class="Magestore\FeatureProduct\Block\FeatureProduct" name="featureproduct.popup.on.homepage" template="Magestore_FeatureProduct::featureproduct.phtml">-->
+                <!--<action method="setPopupOnHomePage" />-->
+            <!--</block>-->
+        </referenceContainer>
+    </body>
+</page>

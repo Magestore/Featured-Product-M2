@@ -1,0 +1,318 @@
+<?php
+/**
+ * Copyright © 2013-2017 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+use Magento\Framework\App\Action\Action;
+
+// @codingStandardsIgnoreFile
+
+/**
+ * Product list template
+ *
+ * @var $block \Magestore\FeatureProduct\Block\FeatureProduct
+ */
+?>
+<?php
+    $featureIdCms = $block->getFeatureIdCms();
+    if ($featureIdCms){
+        $listFeature = $block->getFeatureCmsCustom($featureIdCms);
+    }
+    else{
+        $listFeature = $block->getFeatureCollection();
+    }
+?>
+<?php
+foreach ($listFeature as $feature):
+    $qty_in_row = $feature->getData('qty_product_in_row');
+    ?>
+    <?php
+    if($feature->getTypeProduct() == 2){
+        $listProduct = $block->getBestSellerProductCollection($feature->getData('qty_product'));
+    }
+    elseif ($feature->getTypeProduct() == 3){
+        $listProduct = $block->getNewestProductCollection($feature->getData('qty_product'));
+    }
+    else{
+        $listProduct = $block->getFeatureProduct($feature->getFeatureId());
+    }
+
+    if($listProduct->getData()):
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+    $storeManager = $objectManager->get('Magento\Store\Model\StoreManager');
+    $mediaUrl = $storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+    $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW;
+    ?>
+    <?php if($feature->getData('visible_title')): ?>
+    <h2 style="margin-left: 20px; margin-bottom: 0px" class="featureproduct-title"><?php echo $feature->getName(); ?></h2>
+    <?php endif; ?>
+    <div class="feature-product">
+    <?php
+    if($feature->getData('type') == 'slide'):
+    ?>
+    <div style="margin: 0px 0px" class="products wrapper <?php /* @escapeNotVerified */ echo "grid"; ?> products-<?php /* @escapeNotVerified */ echo "grid"; ?>">
+        <ol style="margin: 0px 0px" id="my_carousel_<?php echo $feature->getId(); ?>" class = "my_carousel_<?php echo $feature->getId(); ?> owl-carousel owl-theme products list items product-items">
+            <?php /** @var $product \Magento\Catalog\Model\Product */ ?>
+            <?php foreach ($listProduct as $product){ ?>
+                <?php
+                    $parentIds = $objectManager->get('Magento\ConfigurableProduct\Model\Product\Type\Configurable')
+                        ->getParentIdsByChild($product->getId());
+                    $parentId = array_shift($parentIds);
+                    if(!is_null($parentId)){
+                        $parentProduct = $objectManager->create('\Magento\Catalog\Model\Product')->load($parentId);
+                    }
+                    $addToCartUrl = $objectManager->get('\Magento\Catalog\Block\Product\ListProduct')
+                        ->getAddToCartUrl($product);
+                    $dataPost = $objectManager->get('Magento\Framework\Data\Helper\PostHelper')
+                        ->getPostData($addToCartUrl,['product'=>$product->getId()]);
+                ?>
+                <li style="width: 100%;" class="owl-item item product product-item">
+                    <div style="width: 80%;" class="product-item-info" data-container="product-grid">
+                        <a class="product photo product-item-photo" href="<?php if(is_null($parentId)){echo $product->getProductUrl();}else{echo $parentProduct->getProductUrl();} ?>">
+                            <img src="<?php echo $mediaUrl.'/catalog/product'.$product->getThumbnail(); ?>" alt="<?php echo $product->getName() ?>">
+                        </a>
+                        <div class="product-bottom product details product-item-details">
+                            <div class="produc-info" style="margin-top: 15px;">
+                                <?php if($feature->getData('visible_product_name')): ?>
+                                <a href="<?php if(is_null($parentId)){echo $product->getProductUrl();}else{echo $parentProduct->getProductUrl();} ?>">
+                                    <strong><?php echo $product->getName(); ?></strong>
+                                </a>
+                                <?php endif; ?>
+                                <?php if($feature->getData('visible_product_review')): ?>
+                                <?php if(is_null($parentId)){echo $block->getReviewsSummaryHtml($product, $templateType, 1);}else{echo $block->getReviewsSummaryHtml($parentProduct, $templateType, 1);} ?>
+                                <?php endif; ?>
+                                <?php if($feature->getData('visible_product_price')): ?>
+                                <?php echo $block->getProductPrice($product) ?>
+                                <?php endif; ?>
+                                <?php echo $block->getProductDetailsHtml($product); ?>
+                            </div>
+                            <?php if($feature->getData('visible_add_to_cart')): ?>
+                            <div class="product-item-bottom">
+                                <div class="product actions product-item-actions">
+                                    <div class="actions-primary">
+                                        <button type="button" class="action tocart primary" data-post = '<?php echo $dataPost; ?>'><span><?php echo __('Add To Cart');?></span></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php  endif;?>
+                        </div>
+                    </div>
+                </li>
+            <?php } ?>
+        </ol>
+    </div>
+
+        <script type="text/javascript">
+            require([
+                'jquery',
+                'magestore/owlcarousel'
+            ],function ($) {
+                $(document).ready(function () {
+                    $('#my_carousel_<?php echo $feature->getId(); ?>.my_carousel_<?php echo $feature->getId(); ?>').owlCarousel({
+                        items:<?php echo $qty_in_row; ?>,
+                        autoplayTimeout:<?php echo $feature->getData('time_slide')*1000; ?>,
+                        autoplay:<?php echo $feature->getData('slide_auto_play'); ?>,
+                        autoplayHoverPause:<?php echo $feature->getData('slide_hover_pause'); ?>,
+                        nav:<?php echo $feature->getData('slide_visible_nav'); ?>,
+                        dots:<?php echo $feature->getData('slide_visible_dots'); ?>,
+                        loop:true,
+                        stagePadding:20,
+                        smartSpeed:1000,
+                        fluidSpeed:1000,
+                        responsive:{
+                            0:{
+                                items:<?php if($qty_in_row >= 2){echo '2';}else{echo $qty_in_row;} ?>,
+                            },
+                            768:{
+                                items:<?php if($qty_in_row >= 3){echo '3';}else{echo $qty_in_row;} ?>,
+                            },
+                            1024:{
+                                items:<?php if($qty_in_row >= 4){echo '4';}else{echo $qty_in_row;} ?>,
+                            },
+                            1280:{
+                                items:<?php echo $feature->getData('qty_product_in_row'); ?>,
+                            }
+                        },
+                    });
+                });
+            });
+        </script>
+        <style type="text/css">
+            .feature-product .owl-stage li{
+                margin-top: 10px;
+                margin-left: 20px;
+            }
+            .feature-product .owl-theme .product-reviews-summary{
+                margin-bottom: 5px;
+            }
+            @media only screen and (min-width: 1024px) {
+                .feature-product .product-item .price-box {
+                    margin-bottom: 5px;
+                    margin-top: 5px;
+                }
+            }
+            .feature-product .products-grid .product-item-actions{
+                margin-bottom: 0px;
+            }
+            .feature-product .product-item-info{
+                margin-bottom: 30px;
+            }
+            .feature-product .owl-theme .owl-nav{
+                position: relative;
+                top: -10px;
+            }
+            .feature-product .owl-theme .owl-dots{
+                position: relative;
+                top: -15px;
+                z-index: -1;
+            }
+        </style>
+
+    <?php elseif ($feature->getData('type') == 'grid'): ?>
+        <div id="my_feature_product_<?php echo $feature->getId(); ?>" class="products wrapper <?php /* @escapeNotVerified */ echo "grid"; ?> products-<?php /* @escapeNotVerified */ echo "grid"; ?>">
+            <?php $iterator = 1; ?>
+            <ol class="products list items product-items">
+                <?php /** @var $_product \Magento\Catalog\Model\Product */ ?>
+                <?php /** @var $parentProduct \Magento\Catalog\Model\Product */ ?>
+                <?php foreach ($listProduct as $_product){ ?>
+                <?php
+                    $parentIds = $objectManager->get('Magento\ConfigurableProduct\Model\Product\Type\Configurable')
+                        ->getParentIdsByChild($_product->getId());
+                    $parentId = array_shift($parentIds);
+                    if(!is_null($parentId)){
+                        $parentProduct = $objectManager->create('\Magento\Catalog\Model\Product')->load($parentId);
+//                        \Zend_Debug::dump($parentProduct->getData());
+                    }
+                    $addToCartUrl = $objectManager->get('\Magento\Catalog\Block\Product\ListProduct')
+                        ->getAddToCartUrl($_product);
+                    $dataPost = $objectManager->get('Magento\Framework\Data\Helper\PostHelper')
+                        ->getPostData($addToCartUrl,['product'=>$_product->getId()]);
+                ?>
+                <?php /* @escapeNotVerified */ echo($iterator++ == 1) ? '<li class="item product product-item">' : '</li><li class="item product product-item">' ?>
+                <div class="product-item-info" data-container="product-grid">
+                    <a href="<?php /* @escapeNotVerified */ if(is_null($parentId)){echo $_product->getProductUrl();}else{echo $parentProduct->getProductUrl();} ?>" class="product photo product-item-photo" tabindex="-1">
+                        <img src="<?php echo $mediaUrl.'/catalog/product'.$_product->getThumbnail(); ?>" alt="<?php echo $_product->getName() ?>">
+                    </a>
+                    <div class="product details product-item-details">
+                        <?php
+                        $_productNameStripped = $block->stripTags($_product->getName(), null, true);
+                        ?>
+                        <?php if($feature->getData('visible_product_name')): ?>
+                        <strong class="product name product-item-name">
+                            <a class="product-item-link"
+                               href="<?php /* @escapeNotVerified */ if(is_null($parentId)){echo $_product->getProductUrl();}else{echo $parentProduct->getProductUrl();} ?>">
+                                <?php /* @escapeNotVerified */ echo $_product->getName(); ?>
+                            </a>
+                        </strong>
+                        <?php endif; ?>
+                        <?php if($feature->getData('visible_product_review')): ?>
+                        <?php if(is_null($parentId)){echo $block->getReviewsSummaryHtml($_product, $templateType, 1);}else{echo $block->getReviewsSummaryHtml($parentProduct, $templateType, 1);} ?>
+                        <?php endif; ?>
+                        <?php if($feature->getData('visible_product_name')): ?>
+                        <?php /* @escapeNotVerified */ echo $block->getProductPrice($_product) ?>
+                        <?php endif; ?>
+                        <?php echo $block->getProductDetailsHtml($_product); ?>
+                        <?php if($feature->getData('visible_add_to_cart')): ?>
+                        <div class="product-item-bottom">
+                            <div class="product actions product-item-actions">
+                                <div class="actions-primary">
+                                    <?php if ($_product->isSaleable()): ?>
+                                        <?php $postParams = $block->getAddToCartPostParams($_product); ?>
+                                        <form data-role="tocart-form" action="<?php /* @escapeNotVerified */ echo $postParams['action']; ?>" method="post">
+                                            <input type="hidden" name="product" value="<?php /* @escapeNotVerified */ echo $postParams['data']['product']; ?>">
+                                            <input type="hidden" name="<?php /* @escapeNotVerified */ echo Action::PARAM_NAME_URL_ENCODED; ?>" value="<?php /* @escapeNotVerified */ echo $postParams['data'][Action::PARAM_NAME_URL_ENCODED]; ?>">
+                                            <?php echo $block->getBlockHtml('formkey')?>
+                                            <button type="button"
+                                                    data-post = '<?php echo $dataPost; ?>'
+                                                    title="<?php echo $block->escapeHtml(__('Add to Cart')); ?>"
+                                                    class="action tocart primary">
+                                                <span><?php /* @escapeNotVerified */ echo __('Add to Cart') ?></span>
+                                            </button>
+                                        </form>
+                                    <?php else: ?>
+                                        <?php if ($_product->getIsSalable()): ?>
+                                            <div class="stock available"><span><?php /* @escapeNotVerified */ echo __('In stock') ?></span></div>
+                                        <?php else: ?>
+                                            <div class="stock unavailable"><span><?php /* @escapeNotVerified */ echo __('Out of stock') ?></span></div>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                        <?php endif; ?>
+                <?php } ?>
+            </ol>
+        </div>
+    <?php endif; ?>
+    </div>
+        <style type="text/css">
+            .feature-product #my_feature_product_<?php echo $feature->getId(); ?>{
+                width: 100%;
+                margin: 0px 5px;
+            }
+            .feature-product #my_feature_product_<?php echo $feature->getId(); ?> ol{
+                width: 100%;
+            }
+
+            @media only screen and (min-width: 640px){
+                .feature-product #my_feature_product_<?php echo $feature->getId(); ?> ol li{
+                    margin: 0px 0px;
+                    padding: 5px 10px;
+                    width: <?php if($qty_in_row >= 3){echo '33.33%';}else{echo 100/$qty_in_row.'%';} ?>;
+                }
+            }
+            @media only screen and (min-width: 1024px){
+                .feature-product #my_feature_product_<?php echo $feature->getId(); ?> ol li{
+                    margin: 0px 0px;
+                    padding: 5px 10px;
+                    width: <?php if($qty_in_row >= 4){echo '25%';}else{echo 100/$qty_in_row.'%';} ?>;
+                }
+            }
+            @media only screen and (min-width: 1280px){
+                .feature-product #my_feature_product_<?php echo $feature->getId(); ?> ol li{
+                    margin: 0px 0px;
+                    padding: 5px 10px;
+                    width: <?php echo 100/$qty_in_row.'%'; ?>;
+                }
+            }
+
+            @media only screen and (min-width: 1024px){
+                .feature-product .product-item-info:not(:hover):not(.active) .product-item-bottom{
+                    border: 0;
+                    clip: rect(0, 0, 0, 0);
+                    height: 1px;
+                    margin: -1px;
+                    overflow: hidden;
+                    padding: 0;
+                    position: absolute;
+                    width: 1px;
+                }
+                .feature-product .product-item-bottom{
+                    background: #ffffff;
+                    box-shadow: 3px 3px 4px 0 rgba(0, 0, 0, 0.3);
+                    border: 1px solid #bbbbbb;
+                    border-top: none;
+                    left: 0;
+                    margin: 9px 0 0 -1px;
+                    padding: 0 9px 9px;
+                    position: absolute;
+                    right: -1px;
+                    z-index: 20;
+                }
+                .feature-product .product-item-actions{
+                    display: none;
+                }
+            }
+            .feature-product .product-item-actions{
+                display: block;
+            }
+
+            .feature-product #my_feature_product_<?php echo $feature->getId(); ?> ol li .product-item-info{
+                width: 100%;
+            }
+            .feature-product #my_feature_product_<?php echo $feature->getId(); ?> ol li .product-item-info img{
+                width: 80%;
+            }
+        </style>
+    <?php endif; ?>
+<?php endforeach; ?>

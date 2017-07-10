@@ -1,0 +1,13 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Magestore_FeatureProduct::feature" title="FeatureProduct" module="Magestore_FeatureProduct"
+            sortOrder="31" resource="Magestore_FeatureProduct::feature"/>
+        <add id="Magestore_FeatureProduct::feature_manage" title="Manage" module="Magestore_FeatureProduct"
+            sortOrder="1" parent="Magestore_FeatureProduct::feature" action="featureadmin/feature/index" resource="Magestore_FeatureProduct::feature_manage"/>
+        <add id="Magestore_FeatureProduct::setting"
+            resource="Magestore_FeatureProduct::setting"
+            module="Magestore_FeatureProduct" title="Settings" sortOrder="4"
+            action="adminhtml/system_config/edit/section/featureproduct"
+            parent="Magestore_FeatureProduct::feature"/>
+    </menu>
+</config>

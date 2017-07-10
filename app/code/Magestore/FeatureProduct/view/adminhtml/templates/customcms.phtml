@@ -1,0 +1,14 @@
+<?php $featureId = $block->getRequest()->getParam('id'); ?>
+<p style="font-size: 26px"><strong>*Note:</strong> Only Feature Product has position is "custom" be displayed.</p>
+<pre>
+    In Admin page, go to <strong>CONTENT</strong> -> <strong>Pages</strong> -> Select edit page -> <strong>Content</strong> Tab:
+
+    <strong>Copy</strong> and <strong>Paste</strong> this code:
+        <div style="background-color: #b3b3b3;padding: 10px;border-radius: 5px;">
+            {{block class="Magestore\FeatureProduct\Block\FeatureProduct"
+                template="Magestore_FeatureProduct::featureproduct.phtml"
+                position="custom"
+                feature_id_cms="<?php echo $featureId; ?>"}}
+        </div>
+        feature_id_cms: <strong>identify</strong> of Feature Product be displayed.
+</pre>

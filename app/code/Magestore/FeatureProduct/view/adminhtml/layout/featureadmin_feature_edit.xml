@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="editor"/>
+    <head>
+        <title>Manage Feature</title>
+        <link src="Magestore_FeatureProduct::js/script-edit.js"/>
+    </head>
+    <body>
+        <referenceContainer name="left">
+            <block class="Magestore\FeatureProduct\Block\Adminhtml\Feature\Edit\Tabs" name="Magestore_FeatureProduct_edit_tabs"></block>
+        </referenceContainer>
+        <referenceContainer name="content">
+            <block class="Magestore\FeatureProduct\Block\Adminhtml\Feature\Edit" name ="Magestore_FeatureProduct.edit" ></block>
+        </referenceContainer>
+    </body>
+</page>
